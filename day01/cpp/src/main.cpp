@@ -61,9 +61,31 @@ Module parse_input(const std::string& value)
     return item;
  }
 
+auto calculate_fuel_for_mass(const int mass)
+{
+    if ( mass <= 0 )
+    {
+        return 0;
+    }
+
+    auto fuel_mass = (mass / 3) - 2;
+    if (fuel_mass < 0 )
+    {
+        fuel_mass = 0;
+    }
+
+    return fuel_mass;
+}
+
 auto calculate_fuel(const int mass)
 {
-    return  (mass /3) - 2;
+    if ( mass <= 0 )
+    {
+        return 0;
+    }
+    auto fuel_mass = calculate_fuel_for_mass(mass);
+
+    return fuel_mass + calculate_fuel(fuel_mass);
 }
 
 std::vector<Module> read_file(const std::string& filename)

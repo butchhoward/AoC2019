@@ -1,8 +1,30 @@
 #include <iostream>
 
+auto calculate_fuel_for_mass(const int mass)
+{
+    if ( mass <= 0 )
+    {
+        return 0;
+    }
+
+    auto fuel_mass = (mass / 3) - 2;
+    if (fuel_mass < 0 )
+    {
+        fuel_mass = 0;
+    }
+
+    return fuel_mass;
+}
+
 auto calculate_fuel(const int mass)
 {
-    return  (mass /3) - 2;
+    if ( mass <= 0 )
+    {
+        return 0;
+    }
+    auto fuel_mass = calculate_fuel_for_mass(mass);
+
+    return fuel_mass + calculate_fuel(fuel_mass);
 }
 
 int main()
@@ -20,13 +42,13 @@ int main()
     {
         std::cout << "Failed: 14 == 2 :" << calculate_fuel(14) << std::endl;
     }
-    if ( calculate_fuel(1969) != 654)
+    if ( calculate_fuel(1969) != 966)
     {
-        std::cout << "Failed: 1969 == 654 :" << calculate_fuel(1969) << std::endl;
+        std::cout << "Failed: 1969 == 966 :" << calculate_fuel(1969) << std::endl;
     }
-    if ( calculate_fuel(100756) != 33583)
+    if ( calculate_fuel(100756) != 50346)
     {
-        std::cout << "Failed: 100756 == 33583 :" << calculate_fuel(100756) << std::endl;
+        std::cout << "Failed: 100756 == 50346 :" << calculate_fuel(100756) << std::endl;
     }
     return 0;
 }
