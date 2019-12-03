@@ -1,27 +1,9 @@
-# Goal
+An Intcode program is a list of integers separated by commas (like 1,0,0,3,99). To run one, start by looking at the first integer (called position 0). Here, you will find an opcode - either 1, 2, or 99. The opcode indicates what to do; for example, 99 means that the program is finished and should immediately halt. Encountering an unknown opcode means something went wrong.
 
-Fuel required to launch a given module is based on its mass. Specifically, to find the fuel required for a module, take its mass, divide by three, round down, and subtract 2.
+Opcode 1 adds together numbers read from two positions and stores the result in a third position. The three integers immediately after the opcode tell you these three positions - the first two indicate the positions from which you should read the input values, and the third indicates the position at which the output should be stored.
 
-For example:
+For example, if your Intcode computer encounters 1,10,20,30, it should read the values at positions 10 and 20, add those values, and then overwrite the value at position 30 with their sum.
 
-For a mass of 12, divide by 3 and round down to get 4, then subtract 2 to get 2.
-For a mass of 14, dividing by 3 and rounding down still yields 4, so the fuel required is also 2.
-For a mass of 1969, the fuel required is 654.
-For a mass of 100756, the fuel required is 33583.
-The Fuel Counter-Upper needs to know the total fuel requirement. To find it, individually calculate the fuel needed for the mass of each module (your puzzle input), then add together all the fuel values.
+Opcode 2 works exactly like opcode 1, except it multiplies the two inputs instead of adding them. Again, the three integers after the opcode indicate where the inputs and outputs are, not their values.
 
-What is the sum of the fuel requirements for all of the modules on your spacecraft?
-
-
-
-suck up the data, sort it, parse out the parts
-
-leaving it all as strings for now other than the guard id
-
-changed my mind. time is ints. streams are nice.
-
-This code is so rough it's embarassing.
-
-OK that's a little better. Solved the problem i was having with the count_if and max_element functions. Learned new things with decltype. Cleaned up the dumpers with stream functions. Still roughish code, but better.
-
-
+Once you're done processing an opcode, move to the next one by stepping forward 4 positions.

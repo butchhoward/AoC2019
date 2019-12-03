@@ -18,82 +18,80 @@
 #include <iterator>
 
 
-typedef enum {
-    Sleep,
-    Wake,
-    Other
-} EventType;
 
-typedef struct Module 
+std::ostream & operator <<(std::ostream &os, std::vector<int>& intcode)
 {
-    int mass;
-    int fuel;
-} Module;
-
-std::ostream & operator <<(std::ostream &os, const Module& event)
-{
-    os 
-        << "m=" << event.mass
-        << " f=" << event.fuel
-        ;
-    return os;
-}
-
-std::ostream & operator <<(std::ostream &os, std::vector<Module>& modules)
-{
-    for ( auto m : modules)
+    for ( auto m : intcode)
     {
-        os << m << std::endl;
+        os << m << "," ;
     }
     return os;
 }
 
 
-Module parse_input(const std::string& value)
+std::vector<int> read_file(const std::string& filename)
 {
-// 123456
-
-    std::istringstream stream(value);
-    Module item = {0,0};
-    
-    stream >> item.mass;
-
-    return item;
- }
-
-auto calculate_fuel(const int mass)
-{
-    return  (mass /3) - 2;
-}
-
-std::vector<Module> read_file(const std::string& filename)
-{
-    std::vector<Module> modules;
+    std::vector<int> intcode;
     
     std::ifstream datafile(filename);
     if(!datafile)
     {
         std::cout << "Error opening output file" << std::endl;
-        return modules;
+        return intcode;
     }
 
-    std::vector<std::string> raw;
-    std::string line;
-    while (std::getline(datafile, line))
+    for (;;)
     {
-        raw.push_back(line);
+        int code = 0;
+        datafile >> code;
+        if (datafile.eof())
+        {
+            break;
+        }
+        intcode.push_back(code);
+        char comma = ',';
+        datafile >> comma;
+        if (datafile.eof())
+        {
+            break;
+        }
     }
 
-    for ( auto line : raw)
-    {
-        auto module = parse_input(line);
-        module.fuel = calculate_fuel(module.mass);
-        modules.push_back(module);
-    }
 
-    return modules;
+    return intcode;
 }
 
+void run_code( std::vector<int>& intcode )
+{
+    for(std::vector<int>::size_type i = 0; i < intcode.size();)
+    {
+        switch (intcode.at(i))
+        {
+            case 1:
+            {
+                auto a = intcode.at(intcode.at(i+1));
+                auto b = intcode.at(intcode.at(i+2));
+                auto d = intcode.at(i+3);
+                //std::cout << "add " << a << " " << b << " " << d << std::endl;
+                intcode.at(d) = a + b;
+                i += 4;
+            }
+                break;
+            case 2:
+            {
+                auto a = intcode.at(intcode.at(i+1));
+                auto b = intcode.at(intcode.at(i+2));
+                auto d = intcode.at(i+3);
+                //std::cout << "mul " << a << " " << b << " " << d << std::endl;
+                intcode.at(d) = a * b;
+                i += 4;
+            }
+                break;
+            default:
+                return;
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -103,22 +101,16 @@ int main(int argc, char *argv[])
         std::exit(1);
     }
 
-    auto modules = read_file(argv[1]);
-    if (modules.size()==0)
+    auto intcode = read_file(argv[1]);
+    if (intcode.size()==0)
     {
-        std::cout << "No modules in file." << std::ends;
+        std::cout << "No codes in file." << std::ends;
         std::exit(1);
     }
 
-    std::cout << modules << std::endl;
-
-    auto total_fuel = std::accumulate(modules.begin(), modules.end(),
-                                    0,
-                                    [](int a, const Module& item) 
-                                        {return a + item.fuel;}
-                                    );
-    std::cout << "total_fuel=" << total_fuel << std::endl;
-
+    std::cout << intcode << std::endl;
+    run_code(intcode);
+    std::cout << "---" << std::endl << intcode << std::endl;
 
     return 0;
 }
