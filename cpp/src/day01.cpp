@@ -38,7 +38,7 @@ std::ostream & operator <<(std::ostream &os, std::vector<Module>& modules)
 }
 
 
-Module parse_input_01(const std::string& value)
+Module parse_input(const std::string& value)
 {
 // 123456
 
@@ -78,7 +78,7 @@ auto calculate_fuel(const int mass)
 }
 
 
-std::vector<Module> read_file_01(const std::string& filename)
+static std::vector<Module> read_file(const std::string& filename)
 {
     std::vector<Module> modules;
     
@@ -98,7 +98,7 @@ std::vector<Module> read_file_01(const std::string& filename)
 
     for ( auto line : raw)
     {
-        auto module = parse_input_01(line);
+        auto module = parse_input(line);
         module.fuel = calculate_fuel(module.mass);
         modules.push_back(module);
     }
@@ -109,7 +109,7 @@ std::vector<Module> read_file_01(const std::string& filename)
 int day01(const std::string& datafile)
 {
     
-    auto modules = read_file_01(datafile);
+    auto modules = read_file(datafile);
     if (modules.size()==0)
     {
         std::cout << "No modules in file." << std::ends;

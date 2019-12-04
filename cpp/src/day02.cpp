@@ -31,7 +31,7 @@ std::ostream & operator <<(std::ostream &os, std::vector<int>& intcode)
 }
 
 
-std::vector<int> read_file_02(const std::string& filename)
+static std::vector<int> read_file(const std::string& filename)
 {
     std::vector<int> intcode;
     
@@ -97,7 +97,7 @@ void run_code( std::vector<int>& intcode )
 
 int day02(const std::string& datafile)
 {
-    auto intcode = read_file_02(datafile);
+    auto intcode = read_file(datafile);
     if (intcode.size()==0)
     {
         std::cout << "No codes in file." << std::ends;
