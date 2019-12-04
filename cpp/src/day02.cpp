@@ -95,6 +95,43 @@ void run_code( std::vector<int>& intcode )
     }
 }
 
+void day02_part1(const std::vector<int> intcode_orig)
+{
+    std::vector<int> intcode = intcode_orig;
+
+    intcode[1] = 12;
+    intcode[2] = 2;
+
+    //std::cout << intcode << std::endl;
+    run_code(intcode);
+    //std::cout << "---" << std::endl << intcode << std::endl;
+    std::cout << "day02 part 1: " << intcode[0] << std::endl;
+}
+
+void day02_part2(const std::vector<int> intcode_orig)
+{
+
+    for (int noun = 0;noun < 100; noun++)
+    {
+        for (int verb = 0;verb < 100; verb++)
+        {
+            std::vector<int> intcode = intcode_orig;
+
+            intcode[1] = noun;
+            intcode[2] = verb;
+
+            run_code(intcode);
+
+            if (intcode[0] == 19690720)
+            {
+                std::cout << "day02 part 2: " << noun * 100 + verb << std::endl;
+                return;
+            }
+        }
+    }
+    std::cout << "day02 part 2: no match" << std::endl;
+}
+
 int day02(const std::string& datafile)
 {
     auto intcode = read_file(datafile);
@@ -104,9 +141,8 @@ int day02(const std::string& datafile)
         std::exit(1);
     }
 
-    std::cout << intcode << std::endl;
-    run_code(intcode);
-    std::cout << "---" << std::endl << intcode << std::endl;
+    day02_part1(intcode);
+    day02_part2(intcode);
 
     return 0;
 }
