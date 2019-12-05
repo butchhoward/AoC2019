@@ -68,10 +68,32 @@ std::ostream & operator <<(std::ostream &os, Route& route)
     return os;
 }
 
+typedef struct Point 
+{
+    int x;
+    int y;
+} Point;
+
+typedef std::vector<Point> Points;
+
+std::ostream & operator <<(std::ostream &os, Point& p)
+{
+    os << "(" << p.x << "," << p.y << ")";
+    return os;
+}
+std::ostream & operator <<(std::ostream &os, Points& points)
+{
+    for ( auto p : points)
+    {
+        os << p;
+    }
+    return os;
+}
 
 typedef struct Wire 
 {
     Route route;
+    Points points;
 } Wire;
 
 typedef std::vector<Wire> Wires;
@@ -79,6 +101,7 @@ typedef std::vector<Wire> Wires;
 std::ostream & operator <<(std::ostream &os, Wire& wire)
 {
     os << wire.route << std::endl;
+    os << wire.points << std::endl;
     return os;
 }
 
@@ -137,6 +160,39 @@ static Route parse_input(const std::string& value)
     return route;
  }
 
+Points route_points(const Route& route)
+{
+    Points points;
+
+    Point current = {0,0};
+    points.push_back(current);  //start at the origin
+
+    for( auto m : route)
+    {
+        for (int i = 0; i < m.distance; i++)
+        {
+            switch (m.direction) {
+            case Direction::Up:
+                ++current.y;
+                break;
+            case Direction::Down:
+                --current.y;
+                break;
+            case Direction::Left:
+                --current.x;
+                break;
+            case Direction::Right:
+                ++current.x;
+                break;
+            }
+            points.push_back(current);
+        }
+
+    }
+
+    return points;
+}
+
 static Wires read_file(const std::string& filename)
 {
     Wires wires;
@@ -153,6 +209,7 @@ static Wires read_file(const std::string& filename)
     {
         Wire wire;
         wire.route = parse_input(line);
+        wire.points = route_points(wire.route);
         wires.push_back(wire);
     }
 
@@ -169,8 +226,11 @@ int day03(const std::string& datafile)
         std::exit(1);
     }
 
-    std::cout << wires;
-
+    std::cout << "wires: " << wires.size() << std::endl;
+    for (auto w : wires)
+    {
+        std::cout << "wire points: " << w.points.size() << std::endl;
+    }
 
     return 0;
 
