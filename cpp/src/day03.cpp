@@ -15,6 +15,7 @@
 #include <experimental/set>
 #include <numeric>
 #include <iterator>
+#include <limits>
 
 
 typedef enum {
@@ -70,8 +71,11 @@ std::ostream & operator <<(std::ostream &os, Route& route)
 
 typedef struct Point 
 {
-    int x;
-    int y;
+    int x,y;
+    bool operator==(const Point& p) const
+        { return p.x == this->x && p.y == this->y;}
+    bool operator!=(const Point& p) const
+        { return !(p == *this);}
 } Point;
 
 typedef std::vector<Point> Points;
@@ -89,6 +93,13 @@ std::ostream & operator <<(std::ostream &os, Points& points)
     }
     return os;
 }
+
+int manhattan_distance( const Point& p1, const Point& p2)
+{
+    //For example, in the plane, the taxicab distance between (p1,p2) and (q1,q2) is |p1-q1|+|p2-q2|.
+    return abs(p1.x-p2.x) + abs(p1.y-p2.y);
+}
+
 
 typedef struct Wire 
 {
@@ -193,6 +204,25 @@ Points route_points(const Route& route)
     return points;
 }
 
+Points find_intersections( const Wire& wire1, const Wire& wire2)
+{
+    Points intersections;
+
+    for (auto p1 : wire1.points)
+    {
+        for (auto p2 : wire2.points)
+        {
+            if (p1 == p2)
+            {
+                intersections.push_back(p1);
+            }
+        }
+    }
+
+    return intersections;
+
+}
+
 static Wires read_file(const std::string& filename)
 {
     Wires wires;
@@ -220,9 +250,9 @@ int day03(const std::string& datafile)
 {
 
     auto wires = read_file(datafile);
-    if (wires.size()==0)
+    if (wires.size()<2)
     {
-        std::cout << "No wires in file." << std::ends;
+        std::cout << wires.size() << " wire in file. Not enough to work with." << std::ends;
         std::exit(1);
     }
 
@@ -231,6 +261,26 @@ int day03(const std::string& datafile)
     {
         std::cout << "wire points: " << w.points.size() << std::endl;
     }
+
+    Points intersections = find_intersections(wires.at(0), wires.at(1));
+    std::cout << intersections << std::endl;
+
+    Point origin = {0,0};
+    Point nearest = origin;
+    int current_nearest_m = INT_MAX;
+    for (auto p : intersections)
+    {
+        if ( p == origin)
+        {
+            continue;
+        }
+        if (manhattan_distance(origin, p) < current_nearest_m)
+        {
+            nearest = p;
+            current_nearest_m = manhattan_distance(origin, p);
+        }
+    }
+    std::cout << "Nearest: " << nearest << " Distance: " << current_nearest_m << std::endl;
 
     return 0;
 
