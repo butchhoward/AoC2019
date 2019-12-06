@@ -19,17 +19,39 @@
 
 bool has_run_of_digits(const std::string& scode)
 {
+    std::vector<int> adjacent_counts;
 
-    int adjacent_same_count(0);
-    for (std::string::size_type i = 1; i < scode.length(); i++)
+    char last_char = '\0';
+    int last_count = 0;
+    for (const char& d : scode)
     {
-        if ( scode[i-1] == scode[i])
+        if (last_char == '\0')
         {
-            ++adjacent_same_count;
+            last_char = d;
+            last_count = 1;
+        }
+        else if (last_char == d)
+        {
+            ++last_count;
+        }
+        else
+        {
+            adjacent_counts.push_back(last_count);
+            last_char = d;
+            last_count = 1;
         }
     }
-    // std::cout << "adj: " << adjacent_same_count << " ";
-    return adjacent_same_count > 0;
+    adjacent_counts.push_back(last_count);
+
+    // std::cout << "adj: ";
+    // for (auto m : adjacent_counts)
+    // {
+    //     std::cout << m << ",";
+    // }
+    // std::cout << " ** ";
+
+    auto it = std::find_if(adjacent_counts.begin(), adjacent_counts.end(), [](auto& m){return m == 2;});
+    return it != adjacent_counts.end();
 }
 
 bool digits_increase_left_to_right(const std::string& scode)
