@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
     case 3:
         day03(datafile);
         break;
+    case 4:
+        day03(datafile);
+        break;
     }
 
     return 0;
