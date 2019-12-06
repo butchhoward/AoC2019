@@ -1,6 +1,7 @@
 #include "day01.h"
 #include "day02.h"
 #include "day03.h"
+#include "day04.h"
 
 #include <iostream>
 #include <string>
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
         day03(datafile);
         break;
     case 4:
-        day03(datafile);
+        day04(datafile);
         break;
     }
 
