@@ -100,7 +100,6 @@ int manhattan_distance( const Point& p1, const Point& p2)
     return abs(p1.x-p2.x) + abs(p1.y-p2.y);
 }
 
-
 typedef struct Wire 
 {
     Route route;
@@ -210,18 +209,132 @@ Points find_intersections( const Wire& wire1, const Wire& wire2)
 
     for (auto p1 : wire1.points)
     {
-        for (auto p2 : wire2.points)
+        auto it = std::find_if( wire2.points.begin(), wire2.points.end(),
+                                [p1](const Point& p2){return p1 == p2;}
+                                );
+        if (it != wire2.points.end())
         {
-            if (p1 == p2)
-            {
-                intersections.push_back(p1);
-            }
+            intersections.push_back(*it);
         }
     }
 
     return intersections;
 
 }
+
+int find_closest_intersection_to_origin(const Points& intersections)
+{
+    Point origin = {0,0};
+    Point nearest = origin;
+    int current_nearest_m = INT_MAX;
+    for (auto p : intersections)
+    {
+        // std::cout << "I: " << p << " D: " << manhattan_distance(origin, p) << std::endl;
+
+        if ( p == origin)
+        {
+            continue;
+        }
+        if (manhattan_distance(origin, p) < current_nearest_m)
+        {
+            nearest = p;
+            current_nearest_m = manhattan_distance(origin, p);
+        }
+    }
+    // std::cout << "Nearest intersection: " << nearest << std::endl;
+
+    return current_nearest_m;
+}
+
+typedef struct IntersectionSteps 
+{
+    Point intersection;
+    int steps;
+} IntersectionSteps;
+
+std::ostream & operator <<(std::ostream &os, IntersectionSteps& i)
+{
+    os << i.intersection << i.steps << ',' ;
+    return os;
+}
+
+
+std::vector<IntersectionSteps> get_steps_to_intersections(const Route& route, const Points& intersections)
+{
+    //re-route the paths, saving the steps to each intersection 
+    std::vector<IntersectionSteps> isteps;
+
+    Point current = {0,0};
+    int current_steps(0);
+
+    for( auto m : route)
+    {
+        for (int i = 0; i < m.distance; i++)
+        {
+            switch (m.direction) {
+            case Direction::Up:
+                ++current.y;
+                break;
+            case Direction::Down:
+                --current.y;
+                break;
+            case Direction::Left:
+                --current.x;
+                break;
+            case Direction::Right:
+                ++current.x;
+                break;
+            }
+
+            ++current_steps;
+
+            auto found = std::find(intersections.begin(), intersections.end(), current);
+            if ( found != intersections.end())
+            {
+                IntersectionSteps istep = {current, current_steps};
+                isteps.push_back(istep);
+            }
+        }
+
+    }
+
+    return isteps;
+}
+
+int find_fastest_intersection(const Wires& wires, const Points& intersections)
+{
+    std::vector< std::vector<IntersectionSteps> > route_steps;
+    for (auto w : wires)
+    {
+        std::vector<IntersectionSteps> isteps = get_steps_to_intersections(w.route, intersections);
+        route_steps.push_back(isteps);
+    }
+
+
+    int fastest = INT_MAX;
+    for (auto s0 : route_steps.at(0) )
+    {
+        auto it = std::find_if(route_steps.at(1).begin(), route_steps.at(1).end(), 
+                        [s0] (const IntersectionSteps& s) { return s.intersection == s0.intersection; });
+        IntersectionSteps s1 = *it;
+
+        // std::cout << s0.intersection << s0.steps << " " 
+        //           << s1.intersection << s1.steps << " " 
+        //           ;
+
+        int s = s0.steps + s1.steps;
+        if (s < fastest)
+        {
+            fastest = s;
+        }
+        // std::cout << s << ", ";
+    }
+    // std::cout << std::endl;
+
+    return fastest;
+
+}
+
 
 static Wires read_file(const std::string& filename)
 {
@@ -250,37 +363,28 @@ int day03(const std::string& datafile)
 {
 
     auto wires = read_file(datafile);
-    if (wires.size()<2)
+    if (wires.size() < 2)
     {
         std::cout << wires.size() << " wire in file. Not enough to work with." << std::ends;
         std::exit(1);
     }
 
-    std::cout << "wires: " << wires.size() << std::endl;
-    for (auto w : wires)
-    {
-        std::cout << "wire points: " << w.points.size() << std::endl;
-    }
+    // std::cout << "wires: " << wires.size() << std::endl;
+    // for (auto w : wires)
+    // {
+    //     std::cout << "wire points: " << w.points.size() << std::endl;
+    //     std::cout << w.points << std::endl;
+    // }
 
     Points intersections = find_intersections(wires.at(0), wires.at(1));
-    std::cout << intersections << std::endl;
+    // std::cout << intersections << std::endl;
 
-    Point origin = {0,0};
-    Point nearest = origin;
-    int current_nearest_m = INT_MAX;
-    for (auto p : intersections)
-    {
-        if ( p == origin)
-        {
-            continue;
-        }
-        if (manhattan_distance(origin, p) < current_nearest_m)
-        {
-            nearest = p;
-            current_nearest_m = manhattan_distance(origin, p);
-        }
-    }
-    std::cout << "Nearest: " << nearest << " Distance: " << current_nearest_m << std::endl;
+
+    std::cout << "Nearest Distance: " << find_closest_intersection_to_origin(intersections) << std::endl;
+
+
+    //part2
+    std::cout << "Fastest: " << find_fastest_intersection(wires, intersections) << std::endl;
 
     return 0;
 
