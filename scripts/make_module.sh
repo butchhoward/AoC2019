@@ -59,10 +59,17 @@ EOT
 read -r -d '' TEST_CPP <<-EOT
 #include "${MODULE}_test.h"
 #include "${MODULE}_lib.h"
+#include "test_runner.h"
+
 
 bool ${MODULE}_test()
 {
-    return false;
+   test_runner::Tests tests = {
+        //{"YYY Test", YYY_test}
+        //,{"XXX", XXX_test}
+    };
+
+    return test_runner::run_tests(tests);
 }
 EOT
 

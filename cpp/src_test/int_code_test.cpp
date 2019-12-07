@@ -74,6 +74,5 @@ bool int_code_unit_test()
     // 2,4,4,5,99,0 becomes 2,4,4,5,99,9801 (99 * 99 = 9801).
     //1,1,1,4,99,5,6,0,99 becomes 30,1,1,4,2,5,6,0,99.
 
-    std::cout << "PASSED: int_code_unit_test" << std::endl;
     return true;
 }
