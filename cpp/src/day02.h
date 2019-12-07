@@ -5,4 +5,6 @@
 
 int day02(const std::string& datafile);
 
+
+
 #endif
