@@ -15,13 +15,12 @@ bool test_runner::run_tests( const test_runner::Tests& tests )
     {
         if ( t.test() )
         {
-            std::cout << "PASSED: ";
+            std::cout << "PASSED: " << t.description << std::endl;
         }
         else {
             result = false;
-            std::cout << "FAILED: ";
+            std::cerr << "FAILED: " << t.description << std::endl;
         }
-        std::cout << t.description << std::endl;
     }
 
     return result;

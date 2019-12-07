@@ -8,13 +8,11 @@
 int main()
 {
     test_runner::Tests tests = {
-        {"int_code_unit_test",      int_code_unit_test},
-        {"day02_test",              day02_test},
-        {"day03_test",              day03_test},
-        {"day05_test",              day05_test}
+        {"int_code_unit_test",      int_code_unit_test}
+        ,{"day02_test",              day02_test}
+        ,{"day03_test",              day03_test}
+        // ,{"day05_test",              day05_test}
     };
 
-    test_runner::run_tests(tests);
-    
-    return 0;
+    return test_runner::run_tests(tests) ? 0 : 1;
 }
