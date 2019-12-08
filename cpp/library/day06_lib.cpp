@@ -133,9 +133,34 @@ day06lib::Universe day06lib::read_file(const std::string& filename)
     return universe;
 }
 
+int count_orbits_from_item(const day06lib::Universe& universe, const day06lib::OrbitItem& item, int depth)
+{
+    int count(depth);
+    for (auto& orbital : item.orbitals)
+    {
+        auto it = universe.find(orbital);
+        if (it == universe.end())
+        {
+            std::cerr << "unable to find '" << orbital << "' in the universe" << std::endl;
+            break;
+        }
+
+        count += count_orbits_from_item(universe, it->second, depth+1);
+    }
+    return count;
+}
 
 int day06lib::count_orbits(const day06lib::Universe& universe)
 {
     (void)universe;
-    return 0;
+
+    //could also find the only one that is not orbiting something (assuming that assumption holds)
+    auto comit = universe.find("COM");
+    if (comit == universe.end())
+    {
+        return 0;
+    }
+
+    auto& com = comit->second;
+    return count_orbits_from_item(universe, com, 0);
 }

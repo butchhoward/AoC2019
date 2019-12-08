@@ -25,7 +25,7 @@ int day06(const std::string& datafile)
 {
     day06lib::Universe universe = day06lib::read_file(datafile);
 
-    std::cout << universe << std::endl << "universe size=" << universe.size() << std::endl;
+    //std::cout << universe << std::endl << "universe size=" << universe.size() << std::endl;
 
     std::cout << "Day 6 part 1 Direct and Indirect orbits: " << day06lib::count_orbits(universe) << std::endl;
 
