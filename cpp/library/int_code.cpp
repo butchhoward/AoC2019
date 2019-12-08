@@ -9,7 +9,11 @@ typedef enum {
     ADD = 1,
     MUL = 2,
     INP = 3,
-    OUT = 4
+    OUT = 4,
+    JTRUE = 5,
+    JFALSE = 6,
+    LESS = 7,
+    EQUAL = 8
 } Opcode;
 
 typedef enum {
@@ -105,6 +109,68 @@ Storage::iterator halt(Storage::iterator PC, int modes, Storage& intcode, Storag
     return intcode.end();  
 }
 
+Storage::iterator less(Storage::iterator PC, int modes, Storage& intcode, Storage& input, Storage& output)
+{
+    (void)input;
+    (void)output;
+
+    int a = get_value_from_param(intcode, modes, 0, *(PC+1));
+    int b = get_value_from_param(intcode, modes, 1, *(PC+2));
+    intcode.at(*(PC+3)) = a < b ? 1 : 0;
+
+    return PC+4;
+}
+
+Storage::iterator equal(Storage::iterator PC, int modes, Storage& intcode, Storage& input, Storage& output)
+{
+    (void)input;
+    (void)output;
+
+    int a = get_value_from_param(intcode, modes, 0, *(PC+1));
+    int b = get_value_from_param(intcode, modes, 1, *(PC+2));
+    intcode.at(*(PC+3)) = a == b ? 1 : 0;
+
+    return PC+4;
+}
+
+Storage::iterator jump_if_true(Storage::iterator PC, int modes, Storage& intcode, Storage& input, Storage& output)
+{
+    (void)input;
+    (void)output;
+
+    int a = get_value_from_param(intcode, modes, 0, *(PC+1));
+    if (a)
+    {
+        int b = get_value_from_param(intcode, modes, 1, *(PC+2));
+        PC = intcode.begin() + b;
+    }
+    else
+    {
+        PC+=3;
+    }
+
+    return PC;
+}
+
+Storage::iterator jump_if_false(Storage::iterator PC, int modes, Storage& intcode, Storage& input, Storage& output)
+{
+    (void)input;
+    (void)output;
+
+    int a = get_value_from_param(intcode, modes, 0, *(PC+1));
+    if (a == 0)
+    {
+        int b = get_value_from_param(intcode, modes, 1, *(PC+2));
+        PC = intcode.begin() + b;
+    }
+    else
+    {
+        PC+=3;
+    }
+
+    return PC;
+}
+
 void run_code( Storage& intcode, Storage& input, Storage& output )
 {
     Dispatch dispatch;
@@ -112,6 +178,10 @@ void run_code( Storage& intcode, Storage& input, Storage& output )
     dispatch[MUL] = mul;
     dispatch[INP] = inp;
     dispatch[OUT] = out;
+    dispatch[JTRUE] = jump_if_true;
+    dispatch[JFALSE] = jump_if_false;
+    dispatch[LESS] = less;
+    dispatch[EQUAL] = equal;
     dispatch[HALT] = halt;
 
     for(Storage::iterator PC = intcode.begin(); PC != intcode.end();)
