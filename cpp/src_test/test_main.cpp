@@ -11,7 +11,7 @@ int main()
         {"int_code_unit_test",      int_code_unit_test}
         ,{"day02_test",              day02_test}
         ,{"day03_test",              day03_test}
-        // ,{"day05_test",              day05_test}
+        ,{"day05_test",              day05_test}
     };
 
     return test_runner::run_tests(tests) ? 0 : 1;

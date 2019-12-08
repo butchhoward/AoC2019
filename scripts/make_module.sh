@@ -30,9 +30,11 @@ read -r -d '' SRC_HEADER <<-EOT
 #ifndef ${MODULEUP}_H
 #define ${MODULEUP}_H
 
-#include <vector>
+#include <string>
 
-int ${MODULE}_function();
+int ${MODULE}(const std::string& datafile);
+
+
 
 #endif
 EOT
@@ -41,7 +43,7 @@ read -r -d '' SRC_CPP <<-EOT
 #include "${MODULE}.h"
 #include "${MODULE}_lib.h"
 
-int ${MODULE}_function()
+int ${MODULE}(const std::string& datafile)
 {
     return -1;
 }

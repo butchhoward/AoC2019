@@ -1,8 +1,8 @@
 #ifndef DAY05_H
 #define DAY05_H
 
-#include <vector>
+#include <string>
 
-int day05_function();
+int day05(const std::string& datafile);
 
 #endif
