@@ -54,9 +54,17 @@ int day05(const std::string& filename)
         intcode.push_back(code);
     }
 
-    Storage input = {1}, output;
+    Storage intcode_part2 = intcode;
+
+    Storage input = {1}, output;        //air conditioner ID
     run_code(intcode, input, output);
-    std::cout << "day05 " << output << std::endl;
+    std::cout << "day05 part1: " << output << std::endl;
+
+    input.clear();
+    output.clear();
+    input.push_back(5); //thermal panel ID
+    run_code(intcode_part2, input, output);
+    std::cout << "day05 part2: " << output << std::endl;
 
     return 0;
 }
