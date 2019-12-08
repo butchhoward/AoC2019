@@ -20,24 +20,13 @@ int main(int argc, char *argv[])
     std::istringstream stream(argv[1]);
     stream >> day;
     std::string datafile(argv[2]);
-    //std::cout << day << std::endl << datafile << std::endl;
 
     switch (day) {
-    case 1:
-        day01(datafile);
-        break;
-    case 2:
-        day02(datafile);
-        break;
-    case 3:
-        day03(datafile);
-        break;
-    case 4:
-        day04(datafile);
-        break;
-    case 5:
-        day05(datafile);
-        break;
+    case 1: day01(datafile); break;
+    case 2: day02(datafile); break;
+    case 3: day03(datafile); break;
+    case 4: day04(datafile); break;
+    case 5: day05(datafile); break;
     }
 
     return 0;
