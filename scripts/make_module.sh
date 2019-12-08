@@ -45,6 +45,8 @@ read -r -d '' SRC_CPP <<-EOT
 
 int ${MODULE}(const std::string& datafile)
 {
+    (void)datafile;
+
     return -1;
 }
 EOT
@@ -81,3 +83,14 @@ echo "${SRC_HEADER}" > ./src/${MODULE}.h
 echo "${SRC_CPP}" > ./src/${MODULE}.cpp
 echo "${TEST_HEADER}" > ./src_test/${MODULE}_test.h
 echo "${TEST_CPP}" > ./src_test/${MODULE}_test.cpp
+
+
+INCLUDE_MARKER="//MAKEMODULE INCLUDE MARKER. DO NOT DELETE"
+LIST_MARKER="//MAKEMODULE LIST MARKER. DO NOT DELETE"
+
+INCLUDE_ITEM="\#include \"${MODULE}_test\.h\""
+LIST_ITEM=",{\"${MODULE}_test\", ${MODULE}_test}"
+
+# the goofiness with the $ and \\\n is to get a newline in the replacement text
+sed -E -i '' -e "s~${INCLUDE_MARKER}~${INCLUDE_ITEM}"$'\\\n'"&~g" ./src_test/test_main.cpp
+sed -E -i '' -e "s~${LIST_MARKER}~${LIST_ITEM}"$'\\\n'"        &~g"  ./src_test/test_main.cpp
