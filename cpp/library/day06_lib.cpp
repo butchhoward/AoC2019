@@ -112,7 +112,7 @@ day06lib::Universe day06lib::read_file(const std::string& filename)
     std::ifstream datafile(filename);
     if(!datafile)
     {
-        std::cout << "Error opening input file" << std::endl;
+        std::cerr << "Error opening input file" << std::endl;
         return universe;
     }
 
@@ -163,4 +163,102 @@ int day06lib::count_orbits(const day06lib::Universe& universe)
 
     auto& com = comit->second;
     return count_orbits_from_item(universe, com, 0);
+}
+
+std::pair<std::string, int> day06lib::find_common_orbiting_node(const day06lib::Universe& universe, const std::string& source, const std::string& destination)
+{
+    int transfers(0);
+
+    auto it = universe.find(source);
+    auto orbiting = it->second.orbiting;
+
+    while (!day06lib::item_reachable_from(universe, orbiting, destination))
+    {
+        if (it == universe.end() ||
+            it->second.orbiting.empty())
+        {
+            transfers = -1;
+            orbiting.clear();
+            break;
+        }
+
+        ++transfers;
+        it = universe.find(orbiting);
+        orbiting = it->second.orbiting;
+    }
+
+    return std::make_pair(orbiting, transfers);
+}
+
+int day06lib::count_transfers_outbound(const day06lib::Universe& universe, const std::string& source, const std::string& destination)
+{
+
+    int transfers(0);
+
+    auto it = universe.find(source);
+    for (auto orbital : it->second.orbitals)
+    { 
+        if (orbital == destination)
+        {
+            break;
+        }
+
+        if (day06lib::item_reachable_from(universe, orbital, destination))
+        {
+            ++transfers;
+            transfers += count_transfers_outbound(universe, orbital, destination);
+            break;
+        }
+    }
+
+    return transfers;
+
+}
+
+int day06lib::minimum_transfers_between(const day06lib::Universe& universe, const std::string& source, const std::string& destination)
+{
+
+    if (source == destination)
+    {
+        return 0;
+    }
+
+    //into the gravity well until we find a node that can reach the destination
+    auto common = find_common_orbiting_node(universe, source, destination);
+    if (common.second == -1)
+    {
+        return 0;
+    }
+
+    int transfers_outbound = count_transfers_outbound(universe, common.first, destination);
+    return common.second + transfers_outbound;
+}
+
+bool day06lib::item_reachable_from(const day06lib::Universe& universe, const std::string& com, const std::string& destination)
+{
+    auto it = universe.find(com);
+    if (it == universe.end() ||
+        it->second.orbitals.empty())
+    {
+        return false;
+    }
+
+    bool can_reach(false);
+    for (auto& orbital : it->second.orbitals)
+    {
+        if (orbital == destination)
+        {
+            can_reach = true;
+            break;
+        }
+
+        can_reach = day06lib::item_reachable_from(universe, orbital, destination);
+        if (can_reach)
+        {
+            break;
+        }
+    }
+
+
+    return can_reach;
 }

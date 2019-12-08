@@ -25,6 +25,11 @@ void add_to_universe(day06lib::Universe &universe, std::string orbited, std::str
 day06lib::Universe read_file(const std::string& filename);
 
 int count_orbits(const day06lib::Universe& universe);
+int minimum_transfers_between(const day06lib::Universe& universe, const std::string& source, const std::string& destination);
+bool item_reachable_from(const day06lib::Universe& universe, const std::string& com, const std::string& destination);
+
+std::pair<std::string, int> find_common_orbiting_node(const day06lib::Universe& universe, const std::string& source, const std::string& destination);
+int count_transfers_outbound(const day06lib::Universe& universe, const std::string& source, const std::string& destination);
 
 }
 
