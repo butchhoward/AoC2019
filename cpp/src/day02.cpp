@@ -22,43 +22,9 @@
 #include <iterator>
 
 
-static std::vector<int> read_file(const std::string& filename)
-{
-    std::vector<int> intcode;
-    
-    std::ifstream datafile(filename);
-    if(!datafile)
-    {
-        std::cout << "Error opening input file" << std::endl;
-        return intcode;
-    }
-
-    for (;;)
-    {
-        int code = 0;
-        datafile >> code;
-        if (datafile.eof())
-        {
-            break;
-        }
-        intcode.push_back(code);
-        char comma = ',';
-        datafile >> comma;
-        if (datafile.eof())
-        {
-            break;
-        }
-    }
-
-
-    return intcode;
-}
-
-
-
 int day02(const std::string& datafile)
 {
-    auto intcode = read_file(datafile);
+    auto intcode = int_code::read_file(datafile);
     if (intcode.size()==0)
     {
         std::cout << "No codes in file." << std::ends;

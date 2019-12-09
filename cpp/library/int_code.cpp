@@ -1,8 +1,12 @@
 #include "int_code.h"
+
+#include <fstream>
 #include <functional>
 #include <map>
 
 #include "stream_helpers.h"
+
+using namespace int_code;
 
 typedef enum {
     HALT = 99,
@@ -171,7 +175,40 @@ Storage::iterator jump_if_false(Storage::iterator PC, int modes, Storage& intcod
     return PC;
 }
 
-void run_code( Storage& intcode, Storage& input, Storage& output )
+Storage int_code::read_file(const std::string& filename)
+{
+    Storage intcode;
+    
+    std::ifstream datafile(filename);
+    if(!datafile)
+    {
+        std::cout << "Error opening input file" << std::endl;
+        return intcode;
+    }
+
+    for (;;)
+    {
+        int code = 0;
+        datafile >> code;
+        if (datafile.eof())
+        {
+            break;
+        }
+        intcode.push_back(code);
+        char comma = ',';
+        datafile >> comma;
+        if (datafile.eof())
+        {
+            break;
+        }
+    }
+
+
+    return intcode;
+}
+
+
+void int_code::run_code( int_code::Storage& intcode, int_code::Storage& input, int_code::Storage& output )
 {
     Dispatch dispatch;
     dispatch[ADD] = add;
@@ -198,7 +235,7 @@ void run_code( Storage& intcode, Storage& input, Storage& output )
     }
 }
 
-void run_code( Storage& intcode)
+void int_code::run_code( int_code::Storage& intcode)
 {
     Storage input;
     Storage output;

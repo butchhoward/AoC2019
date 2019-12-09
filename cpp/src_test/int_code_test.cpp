@@ -7,9 +7,9 @@
 
 #include <iostream>
 
-static bool test_run(std::vector<int>& v, const std::vector<int>& r, Storage& input, Storage& output)
+static bool test_run(std::vector<int>& v, const std::vector<int>& r, int_code::Storage& input, int_code::Storage& output)
 {
-    run_code(v, input, output);
+    int_code::run_code(v, input, output);
     std::vector<int>::const_iterator a, b;
     for (  a = v.begin(), b = r.begin(); a != v.end(); a++, b++)
     {
@@ -22,18 +22,18 @@ static bool test_run(std::vector<int>& v, const std::vector<int>& r, Storage& in
 }
 static bool test_run(std::vector<int>& v, const std::vector<int>& r)
 {
-    Storage input;
-    Storage output;
+    int_code::Storage input;
+    int_code::Storage output;
     return test_run(v, r, input, output);
 }
 
 
 bool intcode_outputs_the_input()
 {        
-    Storage v = {3,0,4,0,99};
-    Storage r = {77,0,4,0,99};
-    Storage input = {77};
-    Storage output;
+    int_code::Storage v = {3,0,4,0,99};
+    int_code::Storage r = {77,0,4,0,99};
+    int_code::Storage input = {77};
+    int_code::Storage output;
     
     bool t = test_run( v, r, input, output );
     bool d = (input.size() == 0) &&
@@ -45,10 +45,10 @@ bool intcode_outputs_the_input()
 
 bool intcode_outputs_the_two_inputs()
 {        
-    Storage v = {3,0,4,0,3,0,4,0,99};
-    Storage r = {76,0,4,0,3,0,4,0,99};
-    Storage input = {77,76};
-    Storage output;
+    int_code::Storage v = {3,0,4,0,3,0,4,0,99};
+    int_code::Storage r = {76,0,4,0,3,0,4,0,99};
+    int_code::Storage input = {77,76};
+    int_code::Storage output;
     
     bool t = test_run( v, r, input, output );
     bool d = (input.size() == 0) &&
@@ -61,10 +61,10 @@ bool intcode_outputs_the_two_inputs()
 
 bool intcode_consumes_the_input()
 {        
-    Storage v = {3,3,99,0};
-    Storage r = {3,3,99,77};
-    Storage input = {77};
-    Storage output;
+    int_code::Storage v = {3,3,99,0};
+    int_code::Storage r = {3,3,99,77};
+    int_code::Storage input = {77};
+    int_code::Storage output;
     
     bool t = test_run( v, r, input, output );
     bool d = (input.size() == 0) &&
@@ -75,10 +75,10 @@ bool intcode_consumes_the_input()
 
 bool intcode_outputs_an_indirect_value()
 {        
-    Storage v = {4,3,99,77};
-    Storage r = v;
-    Storage input;
-    Storage output;
+    int_code::Storage v = {4,3,99,77};
+    int_code::Storage r = v;
+    int_code::Storage input;
+    int_code::Storage output;
     
     bool t = test_run( v, r, input, output );
     bool d = (input.size() == 0) &&
@@ -90,10 +90,10 @@ bool intcode_outputs_an_indirect_value()
 
 bool intcode_outputs_a_direct_value()
 {        
-    Storage v = {1 * 100 + 4,2,99};
-    Storage r = v;
-    Storage input;
-    Storage output;
+    int_code::Storage v = {1 * 100 + 4,2,99};
+    int_code::Storage r = v;
+    int_code::Storage input;
+    int_code::Storage output;
     
     bool t = test_run( v, r, input, output );
     bool d = (input.size() == 0) &&
@@ -119,11 +119,11 @@ bool mul_two_direct_values()
 
 bool position_mode_input_equals_8()
 {
-    Storage v = {3,9,8,9,10,9,4,9,99,-1,8};
-    Storage input = {8};
-    Storage output;
+    int_code::Storage v = {3,9,8,9,10,9,4,9,99,-1,8};
+    int_code::Storage input = {8};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1);
@@ -131,11 +131,11 @@ bool position_mode_input_equals_8()
 
 bool position_mode_less_8()
 {
-    Storage v = {3,9,7,9,10,9,4,9,99,-1,8};
-    Storage input = {5};
-    Storage output;
+    int_code::Storage v = {3,9,7,9,10,9,4,9,99,-1,8};
+    int_code::Storage input = {5};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1);
@@ -143,11 +143,11 @@ bool position_mode_less_8()
 
 bool immediate_mode_input_equals_8()
 {
-    Storage v = {3,3,1108,-1,8,3,4,3,99};
-    Storage input = {8};
-    Storage output;
+    int_code::Storage v = {3,3,1108,-1,8,3,4,3,99};
+    int_code::Storage input = {8};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1);
@@ -156,11 +156,11 @@ bool immediate_mode_input_equals_8()
 bool immediate_mode_less_8()
 {
     
-    Storage v = {3,3,1107,-1,8,3,4,3,99};
-    Storage input = {5};
-    Storage output;
+    int_code::Storage v = {3,3,1107,-1,8,3,4,3,99};
+    int_code::Storage input = {5};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1);    
@@ -168,11 +168,11 @@ bool immediate_mode_less_8()
 
 bool jump_output_1_when_input_nonzero()
 {
-    Storage v = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
-    Storage input = {5};
-    Storage output;
+    int_code::Storage v = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    int_code::Storage input = {5};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1);    
@@ -180,11 +180,11 @@ bool jump_output_1_when_input_nonzero()
 
 bool jump_output_0_when_input_zero()
 {
-    Storage v = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
-    Storage input = {0};
-    Storage output;
+    int_code::Storage v = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    int_code::Storage input = {0};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 0);    
@@ -193,11 +193,11 @@ bool jump_output_0_when_input_zero()
 
 bool if_input_above_8_output_1001()
 {
-    Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
-    Storage input = {9};
-    Storage output;
+    int_code::Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
+    int_code::Storage input = {9};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1001);    
@@ -205,11 +205,11 @@ bool if_input_above_8_output_1001()
 
 bool if_input_below_8_output_999()
 {
-    Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
-    Storage input = {5};
-    Storage output;
+    int_code::Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
+    int_code::Storage input = {5};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 999);    
@@ -217,11 +217,11 @@ bool if_input_below_8_output_999()
 
 bool if_input_equal_8_output_1000()
 {
-    Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
-    Storage input = {8};
-    Storage output;
+    int_code::Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
+    int_code::Storage input = {8};
+    int_code::Storage output;
     
-    run_code( v, input, output );
+    int_code::run_code( v, input, output );
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1000);    

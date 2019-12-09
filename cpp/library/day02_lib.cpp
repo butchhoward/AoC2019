@@ -21,29 +21,29 @@
 #include <iterator>
 
 
-int day02_part1(const std::vector<int> intcode_orig)
+int day02_part1(const int_code::Storage& intcode_orig)
 {
-    std::vector<int> intcode = intcode_orig;
+    int_code::Storage intcode = intcode_orig;
 
     intcode[1] = 12;
     intcode[2] = 2;
 
-    run_code(intcode);
+    int_code::run_code(intcode);
     return intcode[0];
 }
 
-int day02_part2(const std::vector<int> intcode_orig)
+int day02_part2(const int_code::Storage& intcode_orig)
 {
     for (int noun = 0;noun < 100; noun++)
     {
         for (int verb = 0;verb < 100; verb++)
         {
-            std::vector<int> intcode = intcode_orig;
+            int_code::Storage intcode = intcode_orig;
 
             intcode[1] = noun;
             intcode[2] = verb;
 
-            run_code(intcode);
+            int_code::run_code(intcode);
 
             if (intcode[0] == 19690720)
             {

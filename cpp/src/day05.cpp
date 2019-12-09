@@ -32,7 +32,7 @@ int day05(const std::string& filename)
         return 1;
     }
 
-    Storage intcode;
+    int_code::Storage intcode;
     std::string intcode_string;
     std::getline(datafile, intcode_string);
     std::istringstream stream(intcode_string);
@@ -54,16 +54,16 @@ int day05(const std::string& filename)
         intcode.push_back(code);
     }
 
-    Storage intcode_part2 = intcode;
+    int_code::Storage intcode_part2 = intcode;
 
-    Storage input = {1}, output;        //air conditioner ID
-    run_code(intcode, input, output);
+    int_code::Storage input = {1}, output;        //air conditioner ID
+    int_code::run_code(intcode, input, output);
     std::cout << "day05 part1: " << output << std::endl;
 
     input.clear();
     output.clear();
     input.push_back(5); //thermal panel ID
-    run_code(intcode_part2, input, output);
+    int_code::run_code(intcode_part2, input, output);
     std::cout << "day05 part2: " << output << std::endl;
 
     return 0;

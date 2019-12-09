@@ -22,15 +22,15 @@
 
 using namespace day07lib;
 
-int day07lib::run_amplifier_sequence(const Storage& intcode, const Storage& phasesettings)
+int day07lib::run_amplifier_sequence(const int_code::Storage& intcode, const int_code::Storage& phasesettings)
 {
     int amp_signal = 0;
     for (int amp = 0; amp < 5; amp++)
     {
-        Storage output;
-        Storage input = {phasesettings[amp], amp_signal};
-        Storage amplifier_program = intcode;
-        run_code(amplifier_program, input, output);
+        int_code::Storage output;
+        int_code::Storage input = {phasesettings[amp], amp_signal};
+        int_code::Storage amplifier_program = intcode;
+        int_code::run_code(amplifier_program, input, output);
         if (output.size() != 1)
         {
             std::cerr << "thruster amp error amp=" << amp << " phase settings =" << phasesettings << std::endl;
@@ -44,13 +44,13 @@ int day07lib::run_amplifier_sequence(const Storage& intcode, const Storage& phas
 
 }
 
-std::pair<int, Storage> day07lib::find_optimum_amplifier_setting(const Storage& intcode)
+std::pair<int, int_code::Storage> day07lib::find_optimum_amplifier_setting(const int_code::Storage& intcode)
 {
 
-    Storage phasesettings = {0,1,2,3,4};
+    int_code::Storage phasesettings = {0,1,2,3,4};
 
     int thruster_signal = 0;
-    Storage phasesettings_max;
+    int_code::Storage phasesettings_max;
 
     do
     {
