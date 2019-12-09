@@ -44,6 +44,42 @@ int day07lib::run_amplifier_sequence(const int_code::Storage& intcode, const int
 
 }
 
+int day07lib::run_amplifier_sequence_with_feedback(const int_code::Storage& intcode, const int_code::Storage& phasesettings)
+{
+    int_code::Storage computers[5] = {intcode, intcode, intcode, intcode, intcode};
+
+    int amp_signal = 0;
+    int cycles(0);
+
+    for (int amp = 0; amp < 5; amp++)
+    {
+        int_code::Storage input;
+        int_code::Storage output;
+        if (cycles == 0)
+        {
+            input.push_back(phasesettings[amp]);
+        }
+        input.push_back(amp_signal);
+
+        int_code::run_code(computers[amp], input, output);
+        if (output.size() != 1)
+        {
+            std::cerr << "feedback amp error amp=" << amp 
+                      << " cycle=" << cycles 
+                      << " phase settings =" << phasesettings 
+                      << std::endl;
+            return 0;
+        }
+
+        amp_signal = output[0];
+        output.clear();
+        input.clear();
+    }
+
+    return amp_signal;
+}
+
+
 std::pair<int, int_code::Storage> day07lib::find_optimum_amplifier_setting(const int_code::Storage& intcode)
 {
 
