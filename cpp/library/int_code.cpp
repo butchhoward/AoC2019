@@ -83,8 +83,8 @@ Storage::iterator inp(Storage::iterator PC, int modes, Storage& intcode, Storage
         return PC;
     }
 
-    a = input.back();
-    input.pop_back();
+    a = input.front();
+    input.erase(input.begin());
 
     intcode.at(*(PC+1)) = a;
 

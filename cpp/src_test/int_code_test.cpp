@@ -43,6 +43,22 @@ bool intcode_outputs_the_input()
     return t && d;
 }
 
+bool intcode_outputs_the_two_inputs()
+{        
+    Storage v = {3,0,4,0,3,0,4,0,99};
+    Storage r = {76,0,4,0,3,0,4,0,99};
+    Storage input = {77,76};
+    Storage output;
+    
+    bool t = test_run( v, r, input, output );
+    bool d = (input.size() == 0) &&
+            (output.size() == 2) &&
+            (output.at(0) == 77) && 
+            (output.at(1) == 76);
+        
+    return t && d;
+}
+
 bool intcode_consumes_the_input()
 {        
     Storage v = {3,3,99,0};
@@ -281,6 +297,7 @@ bool int_code_unit_test()
         ,{"intcode_consumes_the_input",              intcode_consumes_the_input}
         ,{"intcode_outputs_an_indirect_value",              intcode_outputs_an_indirect_value}
         ,{"intcode_outputs_a_direct_value", intcode_outputs_a_direct_value}
+        ,{"intcode_outputs_the_two_inputs", intcode_outputs_the_two_inputs}
 
         ,{"add_two_direct_values", add_two_direct_values}
         ,{"mul_two_direct_values", mul_two_direct_values}

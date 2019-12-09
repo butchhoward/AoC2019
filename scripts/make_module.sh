@@ -12,15 +12,18 @@ read -r -d '' LIB_HEADER <<-EOT
 #ifndef ${MODULEUP}_LIB_H
 #define ${MODULEUP}_LIB_H
 
+namespace ${MODULE}lib {
+
 int ${MODULE}_lib_function();
 
+}
 #endif
 EOT
 
 read -r -d '' LIB_CPP <<-EOT
 #include "${MODULE}_lib.h"
 
-int ${MODULE}_lib_function()
+int ${MODULE}lib::${MODULE}_lib_function()
 {
     return -1;
 }
@@ -65,11 +68,15 @@ read -r -d '' TEST_CPP <<-EOT
 #include "${MODULE}_lib.h"
 #include "test_runner.h"
 
+bool ${MODULE}_test_XXX()
+{
+    return false;
+}
 
 bool ${MODULE}_test()
 {
    test_runner::Tests tests = {
-        //{"YYY Test", YYY_test}
+        {"XXX Test", ${MODULE}_test_XXX}
         //,{"XXX", XXX_test}
     };
 
