@@ -235,6 +235,46 @@ void int_code::run_code( int_code::Storage& intcode, int_code::Storage& input, i
     }
 }
 
+int_code::Status int_code::run_code( int_code::State& state )
+{
+    Dispatch dispatch;
+    dispatch[ADD] = add;
+    dispatch[MUL] = mul;
+    dispatch[INP] = inp;
+    dispatch[OUT] = out;
+    dispatch[JTRUE] = jump_if_true;
+    dispatch[JFALSE] = jump_if_false;
+    dispatch[LESS] = less;
+    dispatch[EQUAL] = equal;
+    dispatch[HALT] = halt;
+
+    if (state.status == Status::initializing )
+    {
+        state.pc = state.intcode.begin();
+        state.status = Status::running;
+    }
+
+    for(; state.pc != state.intcode.end() && state.status == running; )
+    {
+        int opcode = *state.pc % 100;
+        int modes = *state.pc / 100;
+        Dispatch::iterator opit = dispatch.find(opcode);
+        if (opit == dispatch.end())
+        {
+            std::cerr << "invalid opcode (" << *state.pc << ") at " << state.pc - state.intcode.begin() << std::endl;
+            state.status = Status::exception;
+            break;
+        }
+
+        state.pc = dispatch[opcode](state.pc, modes, state.intcode, state.input, state.output);
+        if (state.pc == state.intcode.end())
+        {
+            state.status = Status::halted;
+        }
+    }
+    return state.status;
+}
+
 void int_code::run_code( int_code::Storage& intcode)
 {
     Storage input;

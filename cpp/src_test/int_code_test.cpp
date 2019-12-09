@@ -190,6 +190,20 @@ bool jump_output_0_when_input_zero()
             (output.at(0) == 0);    
 }
 
+bool jump_output_0_when_input_zero_with_stateful_computer()
+{
+    int_code::State state;
+    state.intcode = 
+    state.intcode = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    state.input = {0};
+    
+    int_code::Status status = int_code::run_code( state );
+    return (state.input.size() == 0) &&
+            (state.output.size() == 1) &&
+            (state.output.at(0) == 0) &&
+            status == int_code::Status::halted;    
+}
+
 
 bool if_input_above_8_output_1001()
 {
@@ -313,6 +327,8 @@ bool int_code_unit_test()
         ,{"if_input_equal_8_output_1000", if_input_equal_8_output_1000}
         ,{"if_input_below_8_output_999",if_input_below_8_output_999}
         ,{"if_input_above_8_output_1001", if_input_above_8_output_1001}
+
+        ,{"jump_output_0_when_input_zero_with_stateful_computer", jump_output_0_when_input_zero_with_stateful_computer}
     };
 
     return test_runner::run_tests(tests);
