@@ -33,7 +33,10 @@ int day07(const std::string& datafile)
     }
 
     auto t = day07lib::find_optimum_amplifier_setting(intcode);
-    std::cout << "Day7 part amplifier settings: " << t.first << " | " << t.second << std::endl;
+    std::cout << "Day7 part 1 amplifier settings: " << t.first << " | " << t.second << std::endl;
+
+    t = day07lib::find_optimum_amplifier_setting_with_feedback(intcode);
+    std::cout << "Day7 part 2 amplifier settings: " << t.first << " | " << t.second << std::endl;
 
     return -1;
 }
