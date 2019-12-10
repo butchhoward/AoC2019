@@ -190,21 +190,6 @@ bool jump_output_0_when_input_zero()
             (output.at(0) == 0);    
 }
 
-bool jump_output_0_when_input_zero_with_stateful_computer()
-{
-    int_code::State state;
-    state.intcode = 
-    state.intcode = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
-    state.input = {0};
-    
-    int_code::Status status = int_code::run_code( state );
-    return (state.input.size() == 0) &&
-            (state.output.size() == 1) &&
-            (state.output.at(0) == 0) &&
-            status == int_code::Status::halted;    
-}
-
-
 bool if_input_above_8_output_1001()
 {
     int_code::Storage v = {3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
@@ -239,6 +224,34 @@ bool if_input_equal_8_output_1000()
     return (input.size() == 0) &&
             (output.size() == 1) &&
             (output.at(0) == 1000);    
+}
+
+
+bool jump_output_0_when_input_zero_with_stateful_computer()
+{
+    int_code::State state;
+    state.intcode = 
+    state.intcode = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    state.input = {0};
+    
+    int_code::Status status = int_code::run_code( state );
+    return (state.input.size() == 0) &&
+            (state.output.size() == 1) &&
+            (state.output.at(0) == 0) &&
+            status == int_code::Status::halted;    
+}
+
+bool block_when_input_not_present_with_stateful_computer()
+{
+    int_code::State state;
+    state.intcode = 
+    state.intcode = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    state.input.clear();
+    
+    int_code::Status status = int_code::run_code( state );
+    return (state.input.size() == 0) &&
+            (state.output.size() == 0) &&
+            status == int_code::Status::blocking;    
 }
 
 bool int_code_unit_test()
@@ -329,6 +342,7 @@ bool int_code_unit_test()
         ,{"if_input_above_8_output_1001", if_input_above_8_output_1001}
 
         ,{"jump_output_0_when_input_zero_with_stateful_computer", jump_output_0_when_input_zero_with_stateful_computer}
+        ,{"block_when_input_not_present_with_stateful_computer", block_when_input_not_present_with_stateful_computer}
     };
 
     return test_runner::run_tests(tests);
