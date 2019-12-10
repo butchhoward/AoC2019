@@ -80,7 +80,6 @@ Storage::iterator add(Storage::iterator PC, int modes, Storage& intcode, Storage
 int_code::Status add_stateful(int_code::State& state)
 {
     state.pc = add(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -98,7 +97,6 @@ Storage::iterator mul(Storage::iterator PC, int modes, Storage& intcode, Storage
 int_code::Status mul_stateful(int_code::State& state)
 {
     state.pc = mul(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -132,7 +130,6 @@ int_code::Status inp_stateful(int_code::State& state)
     }
 
     state.pc = inp(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -148,7 +145,6 @@ Storage::iterator out(Storage::iterator PC, int modes, Storage& intcode, Storage
 int_code::Status out_stateful(int_code::State& state)
 {
     state.pc = out(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -164,7 +160,6 @@ Storage::iterator halt(Storage::iterator PC, int modes, Storage& intcode, Storag
 int_code::Status halt_stateful(int_code::State& state)
 {
     state.pc = halt(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -183,7 +178,6 @@ Storage::iterator less(Storage::iterator PC, int modes, Storage& intcode, Storag
 int_code::Status less_stateful(int_code::State& state)
 {
     state.pc = less(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -202,7 +196,6 @@ Storage::iterator equal(Storage::iterator PC, int modes, Storage& intcode, Stora
 int_code::Status equal_stateful(int_code::State& state)
 {
     state.pc = equal(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -228,7 +221,6 @@ Storage::iterator jump_if_true(Storage::iterator PC, int modes, Storage& intcode
 int_code::Status jump_if_true_stateful(int_code::State& state)
 {
     state.pc = jump_if_true(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -254,7 +246,6 @@ Storage::iterator jump_if_false(Storage::iterator PC, int modes, Storage& intcod
 int_code::Status jump_if_false_stateful(int_code::State& state)
 {
     state.pc = jump_if_false(state.pc, get_modes(*state.pc), state.intcode, state.input, state.output);
-
     return state.status;
 }
 
@@ -328,6 +319,12 @@ void int_code::run_code( int_code::Storage& intcode)
 
 int_code::Status int_code::run_code( int_code::State& state )
 {
+    if (state.status == Status::halted ||
+        state.status == Status::exception )
+    {
+        return state.status;
+    }
+
     StatefulDispatch dispatch;
     dispatch[ADD] = add_stateful;
     dispatch[MUL] = mul_stateful;
@@ -339,11 +336,12 @@ int_code::Status int_code::run_code( int_code::State& state )
     dispatch[EQUAL] = equal_stateful;
     dispatch[HALT] = halt_stateful;
 
-    if (state.status == Status::initializing )
+    if (state.status == Status::initializing)
     {
         state.pc = state.intcode.begin();
-        state.status = Status::running;
     }
+
+    state.status = Status::running;
 
     for(; state.pc != state.intcode.end() && state.status == running; )
     {

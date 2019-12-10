@@ -254,6 +254,33 @@ bool block_when_input_not_present_with_stateful_computer()
             status == int_code::Status::blocking;    
 }
 
+
+bool block_then_resume_input_with_stateful_computer()
+{
+    int_code::State state;
+    state.intcode = 
+    state.intcode = {3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9};
+    state.input.clear();
+    
+    int_code::Status status = int_code::run_code( state );
+    if ( !((state.input.size() == 0) &&
+            (state.output.size() == 0) &&
+            status == int_code::Status::blocking) )
+            {
+                std::cerr << "block_then_resume_input_with_stateful_computer did not block" << std::endl;
+                return false;
+            } 
+
+    state.input.push_back(0);
+
+    status = int_code::run_code( state );
+
+    return (state.input.size() == 0) &&
+            (state.output.size() == 0) &&
+            status == int_code::Status::halted;    
+
+}
+
 bool int_code_unit_test()
 {
     // 1,0,0,0,99 becomes 2,0,0,0,99 (1 + 1 = 2).
