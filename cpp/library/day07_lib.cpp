@@ -27,17 +27,17 @@ int day07lib::run_amplifier_sequence(const int_code::Storage& intcode, const int
     int amp_signal = 0;
     for (int amp = 0; amp < 5; amp++)
     {
-        int_code::Storage output;
-        int_code::Storage input = {phasesettings[amp], amp_signal};
-        int_code::Storage amplifier_program = intcode;
-        int_code::run_code(amplifier_program, input, output);
-        if (output.size() != 1)
+        int_code::State computer(intcode);
+        computer.input = {phasesettings[amp], amp_signal};
+
+        int_code::run_code(computer);
+        if (computer.output.size() != 1)
         {
             std::cerr << "thruster amp error amp=" << amp << " phase settings =" << phasesettings << std::endl;
             return 0;
         }
 
-        amp_signal = output[0];
+        amp_signal = computer.output[0];
     }
 
     return amp_signal;
