@@ -117,3 +117,26 @@ std::pair<int, int_code::Storage> day07lib::find_optimum_amplifier_setting(const
 
     return std::make_pair(thruster_signal, phasesettings_max);    
 }
+
+std::pair<int, int_code::Storage> day07lib::find_optimum_amplifier_setting_with_feedback(const int_code::Storage& intcode)
+{
+
+    int_code::Storage phasesettings = {5,6,7,8,9};
+
+    int thruster_signal = 0;
+    int_code::Storage phasesettings_max;
+
+    do
+    {
+        auto amp_sequence_output = day07lib::run_amplifier_sequence_with_feedback(intcode, phasesettings);
+
+        if (amp_sequence_output > thruster_signal)
+        {
+            thruster_signal = amp_sequence_output;
+            phasesettings_max = phasesettings;
+        }
+
+    } while (std::next_permutation(phasesettings.begin(), phasesettings.end()));
+
+    return std::make_pair(thruster_signal, phasesettings_max);    
+}

@@ -7,6 +7,7 @@ namespace day07lib {
 
 
 std::pair<int, int_code::Storage> find_optimum_amplifier_setting(const int_code::Storage& intcode);
+std::pair<int, int_code::Storage> find_optimum_amplifier_setting_with_feedback(const int_code::Storage& intcode);
 
 int run_amplifier_sequence(const int_code::Storage& intcode, const int_code::Storage& phasesettings);
 int run_amplifier_sequence_with_feedback(const int_code::Storage& intcode, const int_code::Storage& phasesettings);
