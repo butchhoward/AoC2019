@@ -107,6 +107,8 @@ bool day07_test()
         ,{"sample_thruster_amplifier_2", sample_thruster_amplifier_2}
         ,{"sample_thruster_amplifier_3", sample_thruster_amplifier_3}
         ,{"sample_thruster_amplifier_test_correct_final", sample_thruster_amplifier_test_correct_final}
+        ,{"sample_amplifier_with_feedback_1", sample_amplifier_with_feedback_1}
+        ,{"sample_amplifier_with_feedback_2",sample_amplifier_with_feedback_2}
         //,{"XXX", XXX_test}
     };
 

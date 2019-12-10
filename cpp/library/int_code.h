@@ -20,10 +20,18 @@ typedef enum
     exception
 } Status;
 
+std::ostream & operator<<(std::ostream &os, int_code::Status status);
+
 typedef struct State 
 {
     State() :
         status(Status::initializing),
+        pc(intcode.end())
+    {
+    }
+    State(const int_code::Storage& computer) :
+        status(Status::initializing),
+        intcode(computer),
         pc(intcode.end())
     {
     }
@@ -33,6 +41,8 @@ typedef struct State
     int_code::Storage output;
     Storage::iterator pc;
 } State;
+
+std::ostream & operator <<(std::ostream &os, int_code::State& state);
 
 int_code::Status  run_code( int_code::State& state );
 

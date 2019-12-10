@@ -8,6 +8,35 @@
 
 using namespace int_code;
 
+std::ostream & int_code::operator<<(std::ostream &os, int_code::Status status)
+{
+    switch (status)
+    {
+    case Status::initializing:  os << "initializing"; break;
+    case Status::running:       os << "running"; break;
+    case Status::blocking:      os << "blocking"; break;
+    case Status::halted:        os << "halted"; break;
+    case Status::exception:     os << "exception"; break;
+    default:                    os << "unknown"; break; 
+    };
+
+    return os;
+}
+
+std::ostream & int_code::operator<<(std::ostream &os, int_code::State& state)
+{
+
+    os 
+        << state.status << ", "
+        // << state.intcode
+        // << state.input
+        // << state.output
+        << "PC=" << state.pc - state.intcode.begin()
+        ;
+
+    return os;
+}
+
 typedef enum {
     HALT = 99,
     ADD = 1,

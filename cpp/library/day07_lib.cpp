@@ -46,34 +46,49 @@ int day07lib::run_amplifier_sequence(const int_code::Storage& intcode, const int
 
 int day07lib::run_amplifier_sequence_with_feedback(const int_code::Storage& intcode, const int_code::Storage& phasesettings)
 {
-    int_code::Storage computers[5] = {intcode, intcode, intcode, intcode, intcode};
+    int_code::State computers[5] = {
+        {intcode}, 
+        {intcode}, 
+        {intcode}, 
+        {intcode}, 
+        {intcode}
+    };
 
     int amp_signal = 0;
     int cycles(0);
 
-    for (int amp = 0; amp < 5; amp++)
+    bool feedback_cylce_is_running(true);
+    while(feedback_cylce_is_running)
     {
-        int_code::Storage input;
-        int_code::Storage output;
-        if (cycles == 0)
+        for (int amp = 0; amp < 5; amp++)
         {
-            input.push_back(phasesettings[amp]);
-        }
-        input.push_back(amp_signal);
+            if (cycles == 0)
+            {
+                computers[amp].input.push_back(phasesettings[amp]);
+            }
+            computers[amp].input.push_back(amp_signal);
 
-        int_code::run_code(computers[amp], input, output);
-        if (output.size() != 1)
+            int_code::run_code(computers[amp]);
+            if (computers[amp].output.size() != 1)
+            {
+                std::cerr << "feedback amp error amp=" << amp 
+                        << " cycle=" << cycles 
+                        << " phase settings =" << phasesettings 
+                        << " state : " << computers[amp]
+                        << std::endl;
+                return 0;
+            }
+
+            amp_signal = computers[amp].output[0];
+            computers[amp].output.clear();
+        }
+
+        if (computers[4].status == int_code::Status::halted)
         {
-            std::cerr << "feedback amp error amp=" << amp 
-                      << " cycle=" << cycles 
-                      << " phase settings =" << phasesettings 
-                      << std::endl;
-            return 0;
+            feedback_cylce_is_running = false;
         }
 
-        amp_signal = output[0];
-        output.clear();
-        input.clear();
+        ++cycles;
     }
 
     return amp_signal;
