@@ -18,11 +18,20 @@ std::ostream & operator <<(std::ostream &os, const std::vector<int>& intcode)
     return os;
 }
 
-// std::ostream & operator <<(std::ostream &os, std::vector<std::string>& ss)
-// {
-//     for ( auto s : ss)
-//     {
-//         os << s << "," ;
-//     }
-//     return os;
-// }
+std::ostream & operator <<(std::ostream &os, std::vector<std::string>& ss)
+{
+    for ( auto s : ss)
+    {
+        os << s << "," ;
+    }
+    return os;
+}
+
+std::ostream & operator <<(std::ostream &os, const std::vector<std::string>& ss)
+{
+    for ( auto s : ss)
+    {
+        os << s << "," ;
+    }
+    return os;
+}

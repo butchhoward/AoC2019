@@ -5,6 +5,7 @@
 #include "day05.h"
 #include "day06.h"
 #include "day07.h"
+#include "day08.h"
 
 #include <iostream>
 #include <string>
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
     case 5: day05(datafile); break;
     case 6: day06(datafile); break;
     case 7: day07(datafile); break;
+    case 8: day08(datafile); break;
     default:
         std::cerr << "unknown day. did you forget to update the switch in main.cpp?" << std::endl;
     }

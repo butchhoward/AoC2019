@@ -20,15 +20,6 @@
 
 using namespace day06lib;
 
-std::ostream & operator <<(std::ostream &os, std::vector<std::string>& ss)
-{
-    for ( auto s : ss)
-    {
-        os << s << "," ;
-    }
-    return os;
-}
-
 std::ostream & day06lib::operator<<(std::ostream &os, day06lib::OrbitItem& orbititem)
 {
     // not sure why the stream helper for vector<string> is having trouble here, but I'll sort it later

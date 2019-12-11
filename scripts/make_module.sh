@@ -35,7 +35,7 @@ read -r -d '' SRC_HEADER <<-EOT
 
 #include <string>
 
-int ${MODULE}(const std::string& datafile);
+int ${MODULE}(const std::string& filename);
 
 
 
@@ -46,9 +46,9 @@ read -r -d '' SRC_CPP <<-EOT
 #include "${MODULE}.h"
 #include "${MODULE}_lib.h"
 
-int ${MODULE}(const std::string& datafile)
+int ${MODULE}(const std::string& filename)
 {
-    (void)datafile;
+    (void)filename;
 
     return -1;
 }
