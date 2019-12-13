@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # assume running from cpp folder
-# ../scripts/make_module day05
+# ./scripts/make_module day05
 # creates library, src_test, src files for day05 with skeleton files
 
 
